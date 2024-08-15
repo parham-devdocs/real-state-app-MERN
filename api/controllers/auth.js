@@ -41,16 +41,18 @@ export const login = async (req, res) => {
       res.status(401).json({ message: "password is not correct" });
     }
 
-    //GENEREATE JWT
+      //GENEREATE JWT
+      const {password,...userInfo}=user
     const token=jwt.sign({
-      id: user.id,
+        id: user.id,
+        isAdmin:true
     },process.env.JWT_SECRET_KEY,{expiresIn:1000*60*60*24*7})
     res
       .cookie("token", token , {
         httpOnly: true,
         maxAge: 1000 * 60 * 60 * 24 * 7,
       })
-      .json({ message: "login successful" });
+      .json(userInfo);
   } catch (error) {
     console.log(error.message);
     res.json({ message: "failed to login" });
